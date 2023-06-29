@@ -24,7 +24,7 @@ let all =
     };
   ]
 
-let get_by_id id = List.find (fun t -> String.equal id t.id) all
+let get_by_id l id = List.find (fun t -> String.equal id t.id) l
 
 let is_included_in { since; until; _ } v =
   let since_ok =
