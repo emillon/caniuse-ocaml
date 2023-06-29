@@ -1,5 +1,0 @@
-(executable
- (public_name caniuse-server)
- (name server)
- (libraries dream tyxml)
- (preprocess (pps ppx_deriving.ord)))

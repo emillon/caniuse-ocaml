@@ -1,0 +1,4 @@
+(executable
+ (public_name caniuse-server)
+ (name server)
+ (libraries dream tyxml caniuse))

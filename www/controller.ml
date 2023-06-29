@@ -1,4 +1,5 @@
 open StdLabels
+open Caniuse
 
 type t = { features : Feature.t list }
 
