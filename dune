@@ -1,10 +1,5 @@
 (executable
  (public_name caniuse-server)
  (name server)
- (libraries dream)
+ (libraries dream tyxml)
  (preprocess (pps ppx_deriving.ord)))
-
-(rule
- (targets controller.ml)
- (deps controller.eml.ml)
- (action (run dream_eml %{deps} --workspace %{workspace_root})))

@@ -5,5 +5,6 @@
  (name caniuse)
  (depends
    dream
+   tyxml
    ppx_deriving
    ))
