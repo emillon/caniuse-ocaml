@@ -36,3 +36,7 @@ let is_included_in { since; until; _ } v =
   since_ok && until_ok
 
 let versions x = Version.all |> List.filter (is_included_in x)
+
+let matches t ~query =
+  let re = Re.(compile (no_case (str query))) in
+  Re.exec_opt re t.title |> Option.is_some

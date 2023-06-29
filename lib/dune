@@ -1,3 +1,5 @@
 (library
  (public_name caniuse)
- (preprocess (pps ppx_deriving.ord)))
+ (libraries re)
+ (preprocess
+  (pps ppx_deriving.ord)))

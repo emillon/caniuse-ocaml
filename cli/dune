@@ -1,0 +1,4 @@
+(executable
+  (public_name caniuse-cli)
+  (name main)
+  (libraries cmdliner caniuse))

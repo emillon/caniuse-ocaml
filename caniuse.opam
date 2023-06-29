@@ -5,6 +5,7 @@ depends: [
   "dream"
   "tyxml"
   "ppx_deriving"
+  "re"
   "odoc" {with-doc}
 ]
 build: [

@@ -7,4 +7,5 @@
    dream
    tyxml
    ppx_deriving
+   re
    ))
