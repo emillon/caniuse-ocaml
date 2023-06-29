@@ -1,0 +1,14 @@
+(executable
+ (name server)
+ (libraries dream)
+ (preprocess (pps ppx_deriving.ord)))
+
+(rule
+ (targets index.ml)
+ (deps index.eml.ml)
+ (action (run dream_eml %{deps} --workspace %{workspace_root})))
+
+(rule
+ (targets show.ml)
+ (deps show.eml.ml)
+ (action (run dream_eml %{deps} --workspace %{workspace_root})))
