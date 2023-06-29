@@ -7,4 +7,4 @@ RUN opam pin add -yn caniuse .
 RUN opam install -y caniuse --deps-only
 COPY . .
 RUN opam install -y caniuse
-ENTRYPOINT opam exec -- caniuse-server
+CMD opam exec -- caniuse-server
