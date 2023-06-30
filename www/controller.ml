@@ -17,7 +17,8 @@ let link_ ~to_ c =
   let open Tyxml.Html in
   a ~a:[ a_href to_ ] c
 
-let index_js = {|
+let index_js =
+  {|
 (function() {
   document.querySelector('.filter').onkeyup = function(e) {
     const query = e.target.value;
