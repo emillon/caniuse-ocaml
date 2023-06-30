@@ -17,16 +17,34 @@ let link_ ~to_ c =
   let open Tyxml.Html in
   a ~a:[ a_href to_ ] c
 
+let index_js = {|
+(function() {
+  document.querySelector('.filter').onkeyup = function(e) {
+    const query = e.target.value;
+    document.querySelectorAll('[data-title]').forEach(function(i){
+      if(i.dataset.title.includes(query)){
+        i.style.display = '';
+      } else {
+        i.style.display = 'none';
+      }
+    });
+  }
+})()
+|}
+
 let index { features } =
   let open Tyxml.Html in
   layout
     [
-      list features ~f:(fun feature ->
-          [
-            link_
-              ~to_:(Printf.sprintf "/feature/%s" (Feature.id feature))
-              [ txt (Feature.title feature) ];
-          ]);
+      form [ input ~a:[ a_class [ "filter" ] ] () ];
+      ul
+        (List.map features ~f:(fun feature ->
+             let id = Feature.id feature in
+             let title = Feature.title feature in
+             li
+               ~a:[ a_user_data "title" title ]
+               [ link_ ~to_:(Printf.sprintf "/feature/%s" id) [ txt title ] ]));
+      script (txt index_js);
     ]
 
 let show feature =
