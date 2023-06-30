@@ -23,5 +23,5 @@
   re
   cmdliner
   yaml
-  omd))
-
+  omd
+  hilite))

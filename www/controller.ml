@@ -10,7 +10,24 @@ let unsafe_omd doc = Tyxml_html.Unsafe.data (Omd.to_html doc)
 
 let css =
   {|
-
+:root {
+  --base03:   #002b36;
+  --base02:   #073642;
+  --base01:   #586e75;
+  --base00:   #657b83;
+  --base0:    #839496;
+  --base1:    #93a1a1;
+  --base2:    #eee8d5;
+  --base3:    #fdf6e3;
+  --yellow:   #b58900;
+  --orange:   #cb4b16;
+  --red:      #dc322f;
+  --magenta:  #d33682;
+  --violet:   #6c71c4;
+  --blue:     #268bd2;
+  --cyan:     #2aa198;
+  --green:    #859900;
+}
 
 a:link, a:visited {
         text-decoration: none;
@@ -46,9 +63,28 @@ body {
 }
 
 .feature {
-        border: 1px solid gray;
+        border: 1px solid lightgray;
         border-radius:5px;
         padding: 5px;
+}
+
+pre {
+  background-color: var(--base3);
+  padding: 3px;
+}
+
+.ocaml-keyword, .ocaml-keyword-other {
+  color: var(--base03);
+  font-weight: bold;
+}
+
+.ocaml-constant-language-capital-identifier {
+  color: var(--base02);
+}
+
+.ocaml-keyword-operator{
+  color: var(--base01);
+  font-weight: bold;
 }
         |}
 

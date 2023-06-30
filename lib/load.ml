@@ -22,8 +22,9 @@ let parse_yaml_md path =
     | l :: ls -> go (l :: acc) ls
   in
   let open Result_let_syntax in
-  let* yaml, md = go [] lines in
+  let* yaml, md_raw = go [] lines in
   let+ feature = Feature.of_yaml ~path yaml in
+  let md = Hilite.Md.transform md_raw in
   Feature.add_description feature md
 
 let parse_path path =

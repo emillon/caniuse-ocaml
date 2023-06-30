@@ -15,6 +15,7 @@ depends: [
   "cmdliner"
   "yaml"
   "omd"
+  "hilite"
   "odoc" {with-doc}
 ]
 build: [
