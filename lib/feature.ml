@@ -24,14 +24,23 @@ let matches t ~query =
   let re = Re.(compile (no_case (str query))) in
   Re.exec_opt re t.title |> Option.is_some
 
+let error_msgf = Printf.ksprintf (fun s -> Error (`Msg s))
+
 let of_yaml_file ~path =
   let contents = In_channel.with_open_bin path In_channel.input_all in
   let id = Filename.basename path |> Filename.chop_extension in
-  let value = Yaml.of_string_exn contents in
-  let title =
-    value |> Yaml.Util.find_exn "title" |> Option.get |> Yaml.Util.to_string_exn
+  let open Result_let_syntax in
+  let* value = Yaml.of_string contents in
+  let* title =
+    let* value_title = Yaml.Util.find "title" value in
+    match value_title with
+    | None -> Error (`Msg "No title found")
+    | Some s -> Yaml.Util.to_string s
   in
-  let since =
-    value |> Yaml.Util.find_exn "since" |> Option.get |> Version.of_yaml
+  let+ since =
+    let* value_since = Yaml.Util.find "since" value in
+    match value_since with
+    | None -> error_msgf "%s: no since found" path
+    | Some x -> Version.of_yaml x
   in
   { id; title; since = Some since; until = None }

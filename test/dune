@@ -1,0 +1,6 @@
+(test
+  (name test_load)
+  (libraries caniuse)
+  (deps (glob_files ../data/*.yml))
+  (action (run %{test} ../data))
+  )
