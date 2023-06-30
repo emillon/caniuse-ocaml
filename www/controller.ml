@@ -5,13 +5,48 @@ type t = { features : Feature.t list }
 
 let make ~features = { features }
 
+let css =
+  {|
+a:link, a:visited {
+        text-decoration: underline orange 2px;
+        color: currentcolor;
+}
+
+body {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: sans-serif;
+}
+
+.filter {
+  margin-bottom: 20px;
+}
+
+.version {
+  padding:1px;
+  display:inline-block;
+  margin-right: 10px;
+}
+
+.features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+}
+
+.feature {
+        border: 1px solid gray;
+        border-radius:5px;
+        padding: 5px;
+}
+        |}
+
 let layout content =
   let open Tyxml.Html in
-  html (head (title (txt "Can I Use? OCaml")) []) (body content)
-
-let list ~f l =
-  let open Tyxml.Html in
-  ul (List.map ~f:(fun x -> li (f x)) l)
+  html
+    (head (title (txt "Can I Use? OCaml")) [ style [ txt css ] ])
+    (body content)
 
 let link_ ~to_ c =
   let open Tyxml.Html in
@@ -37,26 +72,39 @@ let index { features } =
   let open Tyxml.Html in
   layout
     [
-      form [ input ~a:[ a_class [ "filter" ] ] () ];
-      ul
+      h1 [ txt "Can I Use...? (this OCaml feature)" ];
+      form [ input ~a:[ a_class [ "filter" ]; a_placeholder "let" ] () ];
+      div
+        ~a:[ a_class [ "features" ] ]
         (List.map features ~f:(fun feature ->
              let id = Feature.id feature in
              let title = Feature.title feature in
-             li
-               ~a:[ a_user_data "title" title ]
-               [ link_ ~to_:(Printf.sprintf "/feature/%s" id) [ txt title ] ]));
+             link_
+               ~to_:(Printf.sprintf "/feature/%s" id)
+               [
+                 div
+                   ~a:[ a_class [ "feature" ]; a_user_data "title" title ]
+                   [ h3 [ txt title ] ];
+               ]));
       script (txt index_js);
     ]
 
 let show feature =
   let open Tyxml.Html in
   layout
-    [
-      txt (Feature.title feature);
-      txt "Available in versions:";
-      list (Feature.versions feature) ~f:(fun v ->
-          [ txt (Version.to_string v) ]);
-    ]
+    ([
+       h1 [ txt (Feature.title feature) ];
+       txt "Available in versions:";
+       ul
+         (List.map (Feature.versions feature) ~f:(fun v ->
+              li ~a:[ a_class [ "version" ] ] [ txt (Version.to_string v) ]));
+     ]
+    @
+    match Feature.description feature with
+    | None -> []
+    | Some doc ->
+        (* Note that this allows injection from md files *)
+        [ Tyxml_html.Unsafe.data (Omd.to_html doc) ])
 
 let dream_tyxml = Format.kasprintf Dream.html "%a" (Tyxml.Html.pp ())
 

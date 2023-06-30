@@ -22,4 +22,6 @@
   ppx_deriving
   re
   cmdliner
-  yaml))
+  yaml
+  omd))
+

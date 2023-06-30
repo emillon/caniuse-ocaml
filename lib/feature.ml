@@ -3,6 +3,7 @@ type t = {
   since : Version.t option;
   until : Version.t option;
   title : string;
+  description : Omd.doc option;
 }
 
 let title t = t.title
@@ -26,11 +27,9 @@ let matches t ~query =
 
 let error_msgf = Printf.ksprintf (fun s -> Error (`Msg s))
 
-let of_yaml_file ~path =
-  let contents = In_channel.with_open_bin path In_channel.input_all in
+let of_yaml ~path value =
   let id = Filename.basename path |> Filename.chop_extension in
   let open Result_let_syntax in
-  let* value = Yaml.of_string contents in
   let* title =
     let* value_title = Yaml.Util.find "title" value in
     match value_title with
@@ -43,4 +42,13 @@ let of_yaml_file ~path =
     | None -> error_msgf "%s: no since found" path
     | Some x -> Version.of_yaml x
   in
-  { id; title; since = Some since; until = None }
+  { id; title; since = Some since; until = None; description = None }
+
+let of_yaml_file ~path =
+  let open Result_let_syntax in
+  let contents = In_channel.with_open_bin path In_channel.input_all in
+  let* value = Yaml.of_string contents in
+  of_yaml ~path value
+
+let add_description t doc = { t with description = Some doc }
+let description t = t.description

@@ -2,6 +2,6 @@
  (name test_load)
  (libraries caniuse)
  (deps
-  (glob_files ../data/*.yml))
+  (glob_files ../data/*))
  (action
   (run %{test} ../data)))

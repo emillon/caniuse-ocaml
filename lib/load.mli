@@ -1,1 +1,1 @@
-val yaml : data_dir:string -> Feature.t list
+val dir : path:string -> Feature.t list

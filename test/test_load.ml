@@ -1,8 +1,7 @@
 open Caniuse
 
-let main data_dir =
-  let (_ : Feature.t list) = Load.yaml ~data_dir in
+let main ~path =
+  let (_ : Feature.t list) = Load.dir ~path in
   ()
 
-let () =
-  match Sys.argv with [| _; data_dir |] -> main data_dir | _ -> assert false
+let () = match Sys.argv with [| _; path |] -> main ~path | _ -> assert false
