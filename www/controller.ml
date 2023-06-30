@@ -5,9 +5,19 @@ type t = { features : Feature.t list }
 
 let make ~features = { features }
 
+(* Note that this allows injection from md files *)
+let unsafe_omd doc = Tyxml_html.Unsafe.data (Omd.to_html doc)
+
 let css =
   {|
+
+
 a:link, a:visited {
+        text-decoration: none;
+        color: currentcolor;
+}
+
+a:link h3, a:visited h3 {
         text-decoration: underline orange 2px;
         color: currentcolor;
 }
@@ -84,7 +94,11 @@ let index { features } =
                [
                  div
                    ~a:[ a_class [ "feature" ]; a_user_data "title" title ]
-                   [ h3 [ txt title ] ];
+                   ([ h3 [ txt title ] ]
+                   @
+                   match Feature.description feature with
+                   | None -> []
+                   | Some doc -> [ div [ unsafe_omd doc ] ]);
                ]));
       script (txt index_js);
     ]
@@ -102,9 +116,7 @@ let show feature =
     @
     match Feature.description feature with
     | None -> []
-    | Some doc ->
-        (* Note that this allows injection from md files *)
-        [ Tyxml_html.Unsafe.data (Omd.to_html doc) ])
+    | Some doc -> [ unsafe_omd doc ])
 
 let dream_tyxml = Format.kasprintf Dream.html "%a" (Tyxml.Html.pp ())
 

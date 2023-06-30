@@ -2,4 +2,8 @@ title: Binding operators (let+, let*)
 since: v408
 ---
 
-Binding operators like `let+` and `let*` extend the builtin `let`/`in` syntax.
+```ocaml
+let+ data_dir = arg "data_dir"
+and+ verbose = flag "v" in
+load ~data_dir |> process ~verbose
+```
