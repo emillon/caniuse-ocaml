@@ -1,4 +1,4 @@
-type t [@@deriving ord]
+type t [@@deriving ord, enum]
 
 val all : t list
 val to_string : t -> string

@@ -94,23 +94,26 @@ let layout content =
     (head (title (txt "Can I Use? OCaml")) [ style [ txt css ] ])
     (body content)
 
-let link_ ~to_ c =
-  let open Tyxml.Html in
-  a ~a:[ a_href to_ ] c
-
 let index_js =
   {|
 (function() {
-  document.querySelector('.filter').onkeyup = function(e) {
-    const query = e.target.value;
+  const handler = function() {
+    const featureFilter = document.querySelector('.filter').value;
+    const versionFilter = document.querySelector('.min-version').value;
     document.querySelectorAll('[data-title]').forEach(function(i){
-      if(i.dataset.title.includes(query)){
+      const title = i.dataset.title;
+      const includedInFeatureFilter = title.toLowerCase().includes(featureFilter.toLowerCase());
+      const since = +i.dataset.since;
+      const includedInVersionFilter = versionFilter === '' || since >= +versionFilter;
+      if(includedInFeatureFilter && includedInVersionFilter){
         i.style.display = '';
       } else {
         i.style.display = 'none';
       }
     });
-  }
+  };
+  document.querySelector('.filter').onkeyup = handler;
+  document.querySelector('.min-version').onchange = handler;
 })()
 |}
 
@@ -119,24 +122,37 @@ let index { features } =
   layout
     [
       h1 [ txt "Can I Use...? (this OCaml feature)" ];
-      form [ input ~a:[ a_class [ "filter" ]; a_placeholder "let" ] () ];
+      form
+        [
+          input ~a:[ a_class [ "filter" ]; a_placeholder "let" ] ();
+          select
+            ~a:[ a_class [ "min-version" ] ]
+            (option ~a:[ a_value "" ] (txt "-- any version")
+            :: List.map Version.all ~f:(fun v ->
+                   option
+                     ~a:[ a_value (string_of_int (Version.to_enum v)) ]
+                     (txt (Version.to_string v))));
+        ];
       div
         ~a:[ a_class [ "features" ] ]
         (List.map features ~f:(fun feature ->
              let id = Feature.id feature in
              let title = Feature.title feature in
-             link_
-               ~to_:(Printf.sprintf "/feature/%s" id)
-               [
-                 div
-                   ~a:[ a_class [ "feature" ]; a_user_data "title" title ]
-                   ([ h3 [ txt title ] ]
-                   @
-                   match Feature.description feature with
-                   | None -> []
-                   | Some doc -> [ div [ unsafe_omd doc ] ]);
-               ]));
-      script (txt index_js);
+             a
+               ~a:
+                 [
+                   a_href (Printf.sprintf "/feature/%s" id);
+                   a_class [ "feature" ];
+                   a_user_data "title" title;
+                   a_user_data "since"
+                     (Feature.since feature |> Version.to_enum |> string_of_int);
+                 ]
+               ([ h3 [ txt title ] ]
+               @
+               match Feature.description feature with
+               | None -> []
+               | Some doc -> [ div [ unsafe_omd doc ] ])));
+      script (cdata_script index_js);
     ]
 
 let show feature =

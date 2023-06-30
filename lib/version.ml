@@ -13,7 +13,7 @@ type t =
   | V_413
   | V_414
   | V_50
-[@@deriving ord]
+[@@deriving enum,ord]
 
 let all =
   [
