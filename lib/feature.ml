@@ -1,7 +1,6 @@
 type t = {
   id : string;
   since : Version.t option;
-  until : Version.t option;
   title : string;
   description : Omd.doc option;
 }
@@ -10,14 +9,8 @@ let title t = t.title
 let id t = t.id
 let get_by_id l id = List.find (fun t -> String.equal id t.id) l
 
-let is_included_in { since; until; _ } v =
-  let since_ok =
-    match since with None -> true | Some since -> Version.compare v since >= 0
-  in
-  let until_ok =
-    match until with None -> true | Some until -> Version.compare v until < 0
-  in
-  since_ok && until_ok
+let is_included_in { since; _ } v =
+  match since with None -> true | Some since -> Version.compare v since >= 0
 
 let versions x = Version.all |> List.filter (is_included_in x)
 
@@ -42,7 +35,7 @@ let of_yaml ~path value =
     | None -> error_msgf "%s: no since found" path
     | Some x -> Version.of_yaml x
   in
-  { id; title; since = Some since; until = None; description = None }
+  { id; title; since = Some since; description = None }
 
 let of_yaml_file ~path =
   let open Result_let_syntax in
