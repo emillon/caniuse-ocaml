@@ -6,6 +6,7 @@ depends: [
   "tyxml"
   "ppx_deriving"
   "re"
+  "cmdliner"
   "odoc" {with-doc}
 ]
 build: [
