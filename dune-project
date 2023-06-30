@@ -6,4 +6,12 @@
 
 (package
  (name caniuse)
- (depends dream tyxml ppx_deriving re cmdliner yaml))
+ (depends
+  (ocaml
+   (>= 4.14))
+  dream
+  tyxml
+  ppx_deriving
+  re
+  cmdliner
+  yaml))
