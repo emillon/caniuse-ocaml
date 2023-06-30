@@ -6,4 +6,4 @@
 
 (package
  (name caniuse)
- (depends dream tyxml ppx_deriving re cmdliner))
+ (depends dream tyxml ppx_deriving re cmdliner yaml))

@@ -7,6 +7,7 @@ depends: [
   "ppx_deriving"
   "re"
   "cmdliner"
+  "yaml"
   "odoc" {with-doc}
 ]
 build: [

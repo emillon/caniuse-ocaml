@@ -1,5 +1,5 @@
 (library
  (public_name caniuse)
- (libraries re)
+ (libraries cmdliner re yaml)
  (preprocess
   (pps ppx_deriving.ord)))

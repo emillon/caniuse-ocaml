@@ -11,8 +11,9 @@ let display_feature f =
 let term =
   let open Cmdliner_let_syntax in
   let open Cmdliner.Arg in
-  let+ query = required (pos 0 (some string) None (info [])) in
-  Feature.all
+  let+ query = required (pos 0 (some string) None (info []))
+  and+ data_dir = required (opt (some string) None (info [ "data-dir" ])) in
+  Load.yaml ~data_dir
   |> List.filter ~f:(Feature.matches ~query)
   |> List.iter ~f:display_feature
 

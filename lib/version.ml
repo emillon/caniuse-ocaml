@@ -42,3 +42,20 @@ let to_string = function
   | V_413 -> "4.13"
   | V_414 -> "4.14"
   | V_50 -> "5.0"
+
+let of_yaml_string = function
+  | "v404" -> V_404
+  | "v405" -> V_405
+  | "v406" -> V_406
+  | "v407" -> V_407
+  | "v408" -> V_408
+  | "v409" -> V_409
+  | "v410" -> V_410
+  | "v411" -> V_411
+  | "v412" -> V_412
+  | "v413" -> V_413
+  | "v414" -> V_414
+  | "v50" -> V_50
+  | s -> Printf.ksprintf invalid_arg "Version.of_yaml_string: %S" s
+
+let of_yaml v = v |> Yaml.Util.to_string_exn |> of_yaml_string
